@@ -7,7 +7,7 @@ import { Mail, Briefcase, ContactRound, GitBranch } from "lucide-react";
 export const Metadata = {
   title: "Contact",
   description:
-    "Get in touch about new projects, collaborations, or engineering work.",
+    "Get in touch about new projects, collaborations, or engineering work. Thank you",
 };
 
 const CONTACTS = [
