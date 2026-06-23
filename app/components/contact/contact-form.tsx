@@ -16,8 +16,9 @@ export default function ContactForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const fd = new FormData(e.currentTarget);
@@ -41,11 +42,35 @@ export default function ContactForm() {
       return;
     }
 
-    setErrors({});
-    setSent(true);
+    try {
+      setLoading(true);
+      setErrors({});
 
-    // TODO:
-    // Send to Resend / EmailJS / API Route
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parsed.data),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      setSent(true);
+      e.currentTarget.reset();
+    } catch (error) {
+      console.error(error);
+
+      setErrors({
+        form: "Unable to send message. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -98,12 +123,18 @@ export default function ContactForm() {
             error={errors.message}
             placeholder="Tell me about your project, timeline, and goals."
           />
+          {errors.form && (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+              {errors.form}
+            </div>
+          )}
 
           <button
+            disabled={loading}
             type="submit"
             className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-medium text-white transition-all hover:bg-blue-700"
           >
-            Send Message
+            {loading ? "Sending..." : "Send Message"}
             <Send className="h-4 w-4" />
           </button>
         </div>
