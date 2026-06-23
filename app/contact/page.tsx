@@ -2,14 +2,7 @@
 
 import { Section } from "@/app/components/section";
 import ContactForm from "@/app/components/contact/contact-form";
-import {
-  Mail,
-  Github,
-  Linkedin,
-  Briefcase,
-  ContactRound,
-  GitBranch,
-} from "lucide-react";
+import { Mail, Briefcase, ContactRound, GitBranch } from "lucide-react";
 
 export const Metadata = {
   title: "Contact",
